@@ -3,19 +3,28 @@
 
 int main ()
 {
-  int N, M, Q; // N is the number of dice, Q is the number of sides of the dice, M is the number of turns of the game
+  // N is the number of dice, Q is the number of sides of the dice, M is the number of turns of the game
+  int N, M, Q;
   scanf("%d%d%d", &N, &M, &Q);
 
-  double *Pi = (double *) malloc(N * sizeof(double));  // Possibility which dice would be used in the first turn (N)
-  double **A = (double **) malloc(N * sizeof(double *));  // Possibility for a dice to get a certain side (N*Q)
+  // Possibility which dice would be used in the first turn (N)
+  double *Pi = (double *) malloc(N * sizeof(double));
+
+  // Possibility for a dice to get a certain side (N*Q)
+  double **A = (double **) malloc(N * sizeof(double *));
   for (int i = 0; i < N; ++i) {
     A[i] = (double *) malloc(Q * sizeof(double));
   }
-  double **B = (double **) malloc(N * sizeof(double *));  // A right stochastic matrix (N*N)
+
+  // A right stochastic matrix (N*N)
+  double **B = (double **) malloc(N * sizeof(double *));
   for (int i = 0; i < N; ++i) {
     B[i] = (double *) malloc(N * sizeof(double));
   }
-  int *O = (int *) malloc(M * sizeof(int)); // The result (M)
+
+  // The result (M)
+  int *O = (int *) malloc(M * sizeof(int));
+
 
   for (int i = 0; i < N; ++i) {
     scanf("%lf", &Pi[i]);
@@ -34,7 +43,8 @@ int main ()
     scanf("%d", &O[i]);
   }
 
-  double **D = (double **) malloc(M * sizeof(double *));  // Possibility of the existence of a certain dice in some turn (M*N)
+  double **D = (double **) malloc(
+      M * sizeof(double *));  // Possibility of the existence of a certain dice in some turn (M*N)
   for (int i = 0; i < M; ++i) {
     D[i] = (double *) malloc(N * sizeof(double));
   }
