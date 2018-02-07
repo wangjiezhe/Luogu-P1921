@@ -1,13 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main ()
 {
   int N, M, Q; // N is the number of dice, Q is the number of sides of the dice, M is the number of turns of the game
   scanf("%d%d%d", &N, &M, &Q);
 
-  double Pi[N];  // Possibility which dice would be used in the first turn
-  double A[N][Q];  // Possibility for a dice to get a certain side
-  double B[N][N];  // A right stochastic matrix
+  double *Pi = (double *) malloc(N * sizeof(double));  // Possibility which dice would be used in the first turn (N)
+  double **A = (double **) malloc(N * sizeof(double *));  // Possibility for a dice to get a certain side (N*Q)
+  for (int i = 0; i < N; ++i) {
+    A[i] = (double *) malloc(Q * sizeof(double));
+  }
+  double **B = (double **) malloc(N * sizeof(double *));  // A right stochastic matrix (N*N)
+  for (int i = 0; i < N; ++i) {
+    B[i] = (double *) malloc(N * sizeof(double));
+  }
+  int *O = (int *) malloc(M * sizeof(int)); // The result (M)
 
   for (int i = 0; i < N; ++i) {
     scanf("%lf", &Pi[i]);
@@ -22,48 +30,42 @@ int main ()
       scanf("%lf", &B[i][j]);
     }
   }
+  for (int i = 0; i < M; ++i) {
+    scanf("%d", &O[i]);
+  }
 
-  double p;
-  if (M == 1) {
-    int O;  // The result
-    scanf("%d", &O);
-    p = 0;
-    for (int i = 0; i < N; ++i) {
-      p += Pi[i] * A[i][O];
-    }
-  } else {
-    int O[M]; // The result
-    for (int i = 0; i < M; ++i) {
-      scanf("%d", &O[i]);
-    }
-    double D[M][N];  // Possibility of the existence of a certain dice in some turn
+  double **D = (double **) malloc(M * sizeof(double *));  // Possibility of the existence of a certain dice in some turn (M*N)
+  for (int i = 0; i < M; ++i) {
+    D[i] = (double *) malloc(N * sizeof(double));
+  }
+  for (int j = 0; j < N; ++j) {
+    D[0][j] = Pi[j];
+  }
+  for (int i = 1; i < M; ++i) {
     for (int j = 0; j < N; ++j) {
-      D[0][j] = Pi[j];
-    }
-    for (int i = 1; i < M; ++i) {
-      for (int j = 0; j < N; ++j) {
-        D[i][j] = 0;
-        for (int k = 0; k < N; ++k) {
-          D[i][j] += D[i - 1][k] * B[k][j];
-        }
+      D[i][j] = 0;
+      for (int k = 0; k < N; ++k) {
+        D[i][j] += D[i - 1][k] * B[k][j];
       }
     }
+  }
+
 //  for (int i = 0; i < M; ++i) {
 //    for (int j = 0; j < N; ++j) {
 //      printf("%f ", D[i][j]);
 //    }
 //    printf("\n");
 //  }
-    p = 1;
-    for (int i = 0; i < M; ++i) {
-      double q = 0;
-      for (int j = 0; j < N; ++j) {
-        q += D[i][j] * A[j][O[i]];
-      }
-//    printf("%f ", q);
-      p *= q;
-//    printf("%f\n", p);
+
+  double p = 1;
+  for (int i = 0; i < M; ++i) {
+    double q = 0;
+    for (int j = 0; j < N; ++j) {
+      q += D[i][j] * A[j][O[i]];
     }
+//    printf("%f ", q);
+    p *= q;
+//    printf("%f\n", p);
   }
 
   printf("%.4lf", p);
