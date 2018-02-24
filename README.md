@@ -1,4 +1,4 @@
-[DEPRECATED] \
+**DEPRECATED** \
 Please checkout [wangjiezhe/Luogo](https://github.com/wangjiezhe/Luogu).
 
 
